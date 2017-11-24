@@ -11,16 +11,21 @@ function[Init0]=WARM(data,ch,Cn,S0,S,Pdist,X,Init)
     dict1=false(4000,1);%标记所有停止的编号
     for i=1:S
         fprintf('----------开始地第%d次迭代 ----------\n',i);
-        fprintf('------------Update WW -----%s----------\n',datestr(now())); 
+        fprintf('------------Update WW -----%s----------\n',datestr(now()));      
         try
-            W_loc=(1-Dis/ch^i).*(1-Dis/ch^i)>=0;  
+            W_loc=((1-Dis/ch^i).*((1-Dis/ch^i)>=0)); 
         catch
-            W_loc=(1-Pdist/ch^i).*(1-Pdist/ch^i)>=0;
+            W_loc=(1-Pdist/ch^i).*((1-Pdist/ch^i)>=0);
         end
-        fprintf('------------Update Similar Matrix -----%s----------\n',datestr(now()));
+        fprintf('------------Update WW Matrix -----%s----------\n',datestr(now()));
+        WW=Weight(Init,W_loc,Cn);
+        
         Sim=Smatrix(Init);
-        W_st=exp(-Sim/Cn); % Cn = log(100) * chi2inv(0.95,2)            
-        WW=W_loc.*W_st;
+        W_st=exp(-Sim/Cn); % Cn = log(100) * chi2inv(0.95,2)
+        WWW=W_loc.*W_st;
+        
+        disp(sum(sum(WW-WWW)));
+        
         fprintf('------------Update A -----%s----------\n',datestr(now()));
         A=cell(size(data,2),1);
         for index=1:size(data,2)
