@@ -6,7 +6,7 @@ postion = [repmat(reshape(repmat(1:64,64,1),1,64*64),1,8);
 postion = [repmat(reshape(repmat(1:20,20,1),1,400),1,10);
     repmat(1:20,1,200);
     reshape(repmat(1:10,400,1),1,4000)]';
-% % Dis=squareform(Pdist);
+% Dis=squareform(Pdist);
 %% Éú³ÉÊý¾Ý
 [Beta,A,Fai,Eta,X,Y_norm,Y_chip]=GenerateData(postion,80);
 Pdist=pdist(postion);
@@ -35,7 +35,7 @@ h=5;
 
 tic;
 Eta_est=ones(size(Ydata));
-for index=1:size(Ydata,1)
+parfor index=1:size(Ydata,1)
 %     Pdist_x=pdist(postion(:,1));
 %     Pdist_y=pdist(postion(:,2));
 %     Pdist_z=pdist(postion(:,3));
@@ -64,15 +64,15 @@ K=svd(Eta_est);
 % K=svd(cov_eta);
 % [U,~,V]=svds(cov_eta,5);
 
-num=1;
-siz=20;
-figure(1)
-imagesc(reshape(V(postion(:,3)==6,num),siz,siz))
-figure(2)
-v=Fai{1,:}(:,num);
-imagesc(reshape(v(postion(:,3)==1,1),siz,siz))
+% num=1;
+% siz=64;
+% figure(1)
+% imagesc(reshape(V(postion(:,3)==6,num),siz,siz))
+% figure(2)
+% v=Fai{1,:}(:,num);
+% imagesc(reshape(v(postion(:,3)==6,1),siz,siz))
 
-save D:\¹²ÏíÎÄ¼þ\result_4000h5.mat
+% save D:\¹²ÏíÎÄ¼þ\result_4000h5.mat
 
 % Ñù±¾Ð­·½²î
 res2=res-Eta_est;
@@ -84,10 +84,10 @@ cov_eta=Eta_est'*Eta_est/(size(X,1)-size(X,2));%Ëæ»úÐ§Ó¦µÄÐ­·½²îÕó,µ±ÄÚ´æ²»¹»µÄÊ
 ch=1.1;
 Cn = size(Ydata,1)^0.4 * chi2inv(0.8,1);
 S0=3;
-S=10;
+S=15;
 warm=WARM(Ydata,ch,Cn,S0,S,Pdist,X,Init);
 %estimate
 beta_final=cell2mat(warm(:,1));
-% imagesc(reshape(beta_final(postion(:,3)==1,2),20,20))
-% imagesc(reshape(beta0(postion(:,3)==1,2),20,20))
-% imagesc(reshape(Beta(postion(:,3)==1,2),20,20))
+% imagesc(reshape(beta_final(postion(:,3)==1,2),64,64))
+% imagesc(reshape(beta0(postion(:,3)==1,1),64,64))
+% imagesc(reshape(Beta(postion(:,3)==1,2),64,64))
